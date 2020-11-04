@@ -67,7 +67,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 
 	//Check if the username already exists
 	var exists bool
-	err = DB.QueryRow("SELECT * From users WHERE username = ?", credential.Username).Scan(&exists)
+	err = DB.QueryRow("SELECT EXISTS(SELECT * From users WHERE username = ?)", credential.Username).Scan(&exists)
 
 	//Check for error
 	if err != nil {
@@ -84,7 +84,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Check if the email already exists
-	err = DB.QueryRow("SELECT * FROM users WHERE email = ?", credential.Email).Scan(&exists)
+	err = DB.QueryRow("SELECT EXISTS(SELECT * FROM users WHERE email = ?)", credential.Email).Scan(&exists)
 
 	//Check for error
 	// YOUR CODE HERE
@@ -352,7 +352,7 @@ func verify(w http.ResponseWriter, r *http.Request) {
 	token, ok := r.URL.Query()["token"]
 	// check that valid token exists
 	if !ok || len(token[0]) < 1 {
-		http.Error(w, errors.New("Url Param 'token' is missing").Error(), http.StatusInternalServerError)
+		http.Error(w, errors.New("Url Param 'token' is missing").Error(), http.StatusBadRequest)
 		log.Print(errors.New("Url Param 'token' is missing").Error())
 		return
 	}
@@ -363,7 +363,7 @@ func verify(w http.ResponseWriter, r *http.Request) {
 	//Check for errors in executing the previous query
 	// "YOUR CODE HERE"
 	if err != nil {
-		http.Error(w, errors.New("error in updating verification status").Error(), http.StatusInternalServerError)
+		http.Error(w, errors.New("error in updating verification status").Error(), http.StatusBadRequest)
 		log.Print(err.Error())
 		return
 	}
@@ -472,7 +472,7 @@ func resetPassword(w http.ResponseWriter, r *http.Request) {
 	password := credential.Password
 	var exists bool
 	//check if the username and token pair exist
-	err = DB.QueryRow("SELECT * FROM users WHERE username = ? AND resetToken = ?", username, token).Scan(&exists/*YOUR CODE HERE*/)
+	err = DB.QueryRow("SELECT EXISTS(SELECT * FROM users WHERE username = ? AND resetToken = ?)", username, token).Scan(&exists/*YOUR CODE HERE*/)
 
 	//Check for errors executing the query
 	// "YOUR CODE HERE"

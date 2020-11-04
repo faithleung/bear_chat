@@ -30,7 +30,7 @@ func InitDB() *sql.DB {
 	ipAddress := "tcp(172.28.1.2:3306)"
 	dbName := "/auth"
 	// "YOUR CODE HERE"
-	DB, err := sql.Open(dbType, username + ":" + password + "@" + ipAddress + dbName)
+	DB, err = sql.Open(dbType, username + ":" + password + "@" + ipAddress + dbName)
 	if err != nil {
 		panic(err.Error())
 		// return
@@ -42,7 +42,8 @@ func InitDB() *sql.DB {
 		time.Sleep(20*time.Second)
 		// Connect again, use the same connection function as you did above ^
 		// YOUR CODE HERE
-		_, err = DB.Query("SELECT * FROM users")
+		DB, err = sql.Open(dbType, username + ":" + password + "@" + ipAddress + dbName)
+
 
 	}
 

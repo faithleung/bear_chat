@@ -1,6 +1,6 @@
 # What image are we pulling? What version do we want?
 # FROM <YOUR CODE HERE>
-FROM golang:latest
+FROM mysql/mysql-server
 
 COPY initdb.sql /docker-entrypoint-initdb.d/
 
